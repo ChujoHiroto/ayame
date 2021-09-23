@@ -24,14 +24,12 @@ func server() {
 			rch := register.resultChannel
 			r, ok := m[c.roomID]
 			if ok {
-				// room があった
-				if len(r.connections) == 1 {
+				if len(r.connections) == 9 {
+					rch <- 9
+				} else if len(r.connections) > 0 {
 					r.connections[c.ID] = c
 					m[c.roomID] = r
-					rch <- two
-				} else {
-					// room あったけど満杯
-					rch <- full
+					rch <- len(r.connections)
 				}
 			} else {
 				// room がなかった
@@ -42,7 +40,7 @@ func server() {
 					connections: connections,
 				}
 				c.debugLog().Msg("CREATED-ROOM")
-				rch <- one
+				rch <- 1
 			}
 		case unregister := <-unregisterChannel:
 			c := unregister.connection

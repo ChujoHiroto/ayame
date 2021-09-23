@@ -1,5 +1,6 @@
 package main
 
+/*
 const (
 	// 登録成功
 	// 部屋が作成された相手を待つ
@@ -8,10 +9,25 @@ const (
 	// offer を出させる
 	// 登録成功
 	two
+
+	three
+
+	four
+
+	five
+
+	six
+
+	seven
+
+	eight
+
+	nine
+
 	// 満員だったので Reject か Error を返す
 	// 登録失敗
 	full
-)
+)*/
 
 type register struct {
 	connection    *connection

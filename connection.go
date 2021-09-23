@@ -344,25 +344,25 @@ func (c *connection) handleWsMessage(rawMessage []byte, pongTimeoutTimer *time.T
 
 		c.authzMetadata = resp.AuthzMetadata
 
-		// 戻り値は手抜き
-		switch c.register() {
-		case one:
+		memberNum := c.register()
+
+		if memberNum == 1 {
 			c.registered = true
 			// room がまだなかった、accept を返す
-			c.debugLog().Msg("REGISTERED-ONE")
+			c.debugLog().Msg("REGISTERED-1")
 			if err := c.sendAcceptMessage(false, resp.IceServers, resp.AuthzMetadata); err != nil {
 				c.errLog().Err(err).Msg("FailedSendAcceptMessage")
 				return err
 			}
-		case two:
+		} else if memberNum > 1 && memberNum < 9 {
 			c.registered = true
 			// room がすでにあって、一人いた、二人目
-			c.debugLog().Msg("REGISTERED-TWO")
+			c.debugLog().Msg("REGISTERED-" + string(memberNum))
 			if err := c.sendAcceptMessage(true, resp.IceServers, resp.AuthzMetadata); err != nil {
 				c.errLog().Err(err).Msg("FailedSendAcceptMessage")
 				return err
 			}
-		case full:
+		} else {
 			// room が満杯だった
 			c.errLog().Msg("RoomFilled")
 			if err := c.sendRejectMessage("full"); err != nil {
